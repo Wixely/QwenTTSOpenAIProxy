@@ -31,7 +31,7 @@ services:
       - qwen-tts-network
 
   qwen-tts-openai-proxy:
-    image: ghcr.io/YOUR_GITHUB_OWNER/YOUR_REPOSITORY_NAME:latest
+    image: ghcr.io/wixely/qwenttsopenaiproxy:latest
     container_name: qwen-tts-openai-proxy
     depends_on:
       - qwen-tts
