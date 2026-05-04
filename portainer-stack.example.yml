@@ -27,8 +27,6 @@ services:
               capabilities: [gpu]
     runtime: nvidia
     restart: unless-stopped
-    labels:
-      LazurusWake: "true"
     networks:
       - qwen-tts-network
 
@@ -43,8 +41,6 @@ services:
       QWEN_BACKEND_BASE_URL: "http://qwen-tts:8091"
       QWEN_DEFAULT_MODEL: "Qwen/Qwen3-TTS-12Hz-0.6B-Base"
     restart: unless-stopped
-    labels:
-      LazurusWake: "true"
     networks:
       - qwen-tts-network
 
