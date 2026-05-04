@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
@@ -14,7 +15,7 @@ public sealed class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         builder.Configuration.AddEnvironmentVariables();
-        builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(8092));
+        builder.WebHost.ConfigureKestrel(options => options.Listen(IPAddress.Any, 8092));
 
         builder.Services
             .AddOptions<QwenBackendOptions>()

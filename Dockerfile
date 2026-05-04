@@ -12,7 +12,7 @@ RUN dotnet publish ./QwenTtsOpenAIProxy.csproj -c Release -o /app/publish /p:Use
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 
-ENV ASPNETCORE_URLS=http://+:8092
+ENV ASPNETCORE_URLS=http://0.0.0.0:8092
 EXPOSE 8092
 
 COPY --from=build /app/publish ./
