@@ -1,0 +1,57 @@
+services:
+  qwen-tts:
+    image: vllm/vllm-omni:v0.18.0
+    container_name: qwen-tts
+    ports:
+      - "8091:8091"
+    volumes:
+      - qwen_tts_cache:/root/.cache/huggingface
+    command: >
+      vllm serve Qwen/Qwen3-TTS-12Hz-0.6B-Base
+      --omni
+      --host 0.0.0.0
+      --port 8091
+      --trust-remote-code
+      --gpu-memory-utilization=0.98
+      --max-model-len=512
+      --max-num-seqs=1
+      --enforce-eager
+    environment:
+      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    runtime: nvidia
+    restart: unless-stopped
+    labels:
+      LazurusWake: "true"
+    networks:
+      - qwen-tts-network
+
+  qwen-tts-openai-proxy:
+    image: ghcr.io/YOUR_GITHUB_OWNER/YOUR_REPOSITORY_NAME:latest
+    container_name: qwen-tts-openai-proxy
+    depends_on:
+      - qwen-tts
+    ports:
+      - "8092:8092"
+    environment:
+      QWEN_BACKEND_BASE_URL: "http://qwen-tts:8091"
+      QWEN_DEFAULT_MODEL: "Qwen/Qwen3-TTS-12Hz-0.6B-Base"
+    restart: unless-stopped
+    labels:
+      LazurusWake: "true"
+    networks:
+      - qwen-tts-network
+
+volumes:
+  qwen_tts_cache:
+
+networks:
+  qwen-tts-network:
+    name: qwen-tts-network
+    driver: bridge
